@@ -98,7 +98,8 @@ def hook_callback(event):
             append_char(event.event_name)
             write_report(NULL_CHAR * 8)
 
-
+# Translates the name of the keyboard press into the respective code to send to hidg0
+# Name comes from the keyboard module's event.event_name when a keypress is detected.
 val = {
     'a' : 0x04,
     'b' : 0x05,
@@ -192,6 +193,8 @@ val = {
     'right option' : 0x0E6,
 }
 
+# Translates modifier keys into their hidg0 counterparts.
+# To send 'ctrl' and 'shift' code is 'ctrl' + 'shift'
 mod_vals = {
     'ctrl' : 0b00000001,
     'shift' : 0b00000010,
@@ -203,7 +206,35 @@ mod_vals = {
     'right gui' : 0b10000000
 }
 
+# Translates symbols into their 'uppercase' variants
+# May add letters to here
 upper_symbols = {
+    'a' : 'A',
+    'b' : 'B',
+    'c' : 'C',
+    'd' : 'D',
+    'e' : 'E',
+    'f' : 'F',
+    'g' : 'G',
+    'h' : 'H',
+    'i' : 'I',
+    'j' : 'J',
+    'k' : 'K',
+    'l' : 'L',
+    'm' : 'M',
+    'n' : 'N',
+    'o' : 'O',
+    'p' : 'P',
+    'q' : 'Q',
+    'r' : 'R',
+    's' : 'S',
+    't' : 'T',
+    'u' : 'U',
+    'v' : 'V',
+    'w' : 'W',
+    'x' : 'X',
+    'y' : 'Y',
+    'z' : 'Z',
     '1' : '!',
     '2' : '@',
     '3' : '#',
@@ -227,6 +258,7 @@ upper_symbols = {
     '`' : '~',
 }
 
+# Translates symbols into their 'lowercase' variant
 upper_to_lower = {
     'A' : 'a',
     'B' : 'b',
@@ -277,6 +309,7 @@ upper_to_lower = {
     '~' : '`',
 }
 
+# Special characters to record
 special_save = {
     'space' : ' ',
     'enter' : '\n',
