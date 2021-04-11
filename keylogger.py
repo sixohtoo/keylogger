@@ -173,10 +173,11 @@ val = {
     'ctrl' : 0xE0,
     'shift' : 0xE1,
     'alt' : 0xE2,
-    # Need to add GUI (apparently windows key)
+    'gui' : 0xE3,
     'right ctrl' : 0xE4,
     'right shift' : 0xE5,
     'right option' : 0x0E6,
+    'right gui' : 0xE7,
 }
 
 # Translates modifier keys into their hidg0 counterparts.
