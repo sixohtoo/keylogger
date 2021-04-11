@@ -57,31 +57,31 @@ def append_char(name):
 
 
 def hook_callback(event):
-        global caps_lock
-        if event.name in mod_vals:
-            edit_modifiers(event)
+    global caps_lock
+    if event.name in mod_vals:
+        edit_modifiers(event)
 
-        if event.name == 'caps lock' and event.event_type == 'down':
-            caps_lock = not caps_lock
+    if event.name == 'caps lock' and event.event_type == 'down':
+        caps_lock = not caps_lock
 
-        if event.event_type == 'down':
-            special = 0
-            if modifiers:
-                for mod in modifiers:
-                    special += mod_vals[mod]
-            if event.name.isalpha() and caps_lock:
-                if 'shift' in modifiers:
-                    special -= mod_vals['shift']
-                elif 'right shift' in modifiers:
-                    special -= mod_vals['right shift']
-                else:
-                    special += mod_vals['shift']
-            if not special:
-                write_report(NULL_CHAR * 2 + chr(val[event.name]) + NULL_CHAR * 5)
+    if event.event_type == 'down':
+        special = 0
+        if modifiers:
+            for mod in modifiers:
+                special += mod_vals[mod]
+        if event.name.isalpha() and caps_lock:
+            if 'shift' in modifiers:
+                special -= mod_vals['shift']
+            elif 'right shift' in modifiers:
+                special -= mod_vals['right shift']
             else:
-                write_report(chr(special) + NULL_CHAR + chr(val[event.name]) + NULL_CHAR * 5)
-            write_report(NULL_CHAR * 8)
-            append_char(event.name)
+                special += mod_vals['shift']
+        if not special:
+            write_report(NULL_CHAR * 2 + chr(val[event.name]) + NULL_CHAR * 5)
+        else:
+            write_report(chr(special) + NULL_CHAR + chr(val[event.name]) + NULL_CHAR * 5)
+        write_report(NULL_CHAR * 8)
+        append_char(event.name)
             
 
 # Translates the name of the keyboard press into the respective code to send to hidg0
@@ -128,7 +128,7 @@ val = {
     'backspace' : 0x2A,
     'tab' : 0x2B,
     'space' : 0x2C,
-    '-' : 0x2D,
+    '−' : 0x2D,
     '=' : 0x2E,
     '[' : 0x2F,
     ']' : 0x30,
@@ -231,7 +231,7 @@ upper_symbols = {
     '8' : '*',
     '9' : '(',
     '0' : ')',
-    '-' : '_',
+    '−' : '_',
     '=' : '+',
     '[' : '{',
     ']' : '}',
@@ -282,7 +282,7 @@ upper_to_lower = {
     '*' : '8',
     '(' : '9',
     ')' : '0',
-    '_' : '-',
+    '_' : '−',
     '+' : '=',
     '{' : '[',
     '}' : ']',
